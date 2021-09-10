@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+.content {
+  margin-right:20%;
+}
+
+.login {
+  border-radius: 10%;
+  width: 50%;
+  background-color:rgb(238, 207, 34);
+}
+
+.sidebar{
+  right: 0;
+  width: 20%;
+}
