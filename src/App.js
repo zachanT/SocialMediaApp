@@ -140,7 +140,6 @@ const App = () => {
         <Route path='/login'>
           <Login />
         </Route>
-
         <Route path='/signup'>
           <Signup />
         </Route>
