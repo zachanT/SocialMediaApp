@@ -50,10 +50,9 @@ const _posts = [{
 
 const App = () => {
   const [posts, setPosts] = useState([]);
-  var postCount = posts.length;
 
-  /*useEffect(() => {
-    axios.get('http://localhost:5000/home')
+  useEffect(() => {
+    axios.get('http://localhost:5000/')
         .then(response => {
           if(response.data.length > 0) {
             setPosts(response.data)
@@ -66,7 +65,9 @@ const App = () => {
         .catch((err) => {
           console.log(err);
         })
-  })*/
+  }, [])
+  
+  var postCount = posts.length;
 
   /* Creates a new post when the post button is clicked */
   const handleNewPost = (text) => {
@@ -82,7 +83,7 @@ const App = () => {
     }
 
     setPosts([...posts, post]);
-    axios.post('http://localhost:5000/home/add', post)
+    axios.post('http://localhost:5000/add', post)
       .then(res => {
         // All the state stuff is in the component...
 
@@ -119,18 +120,20 @@ const App = () => {
       <div className="App">
         <Route path='/'>
           <Nav />
-          <Sidebar />
-          <div className="content">
-            <Newpost onSubmit={handleNewPost}/>
-            {posts.length > 0 ? (
-              <Posts 
-                posts={posts}
-                clickLike={handleLike}
-                clickComment={handleComment}
-              />
-            ) : (
-              'No posts, follow someone to see posts'
-            )}
+          <div className="main">
+            <Sidebar />
+            <div className="content">
+              <Newpost onSubmit={handleNewPost}/>
+              {posts.length > 0 ? (
+                <Posts 
+                  posts={posts}
+                  clickLike={handleLike}
+                  clickComment={handleComment}
+                />
+              ) : (
+                'No posts, follow someone to see posts'
+              )}
+            </div>
           </div>
         </Route>
 

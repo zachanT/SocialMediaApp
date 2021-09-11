@@ -28,6 +28,8 @@ router.route('/add').post((req, res) => {
         comments,
     })
 
+    console.log(newPost)
+
     newPost.save()
         .then(() => res.json('Posted!'))
         .catch(err => res.status(400).json('Error ' + err))

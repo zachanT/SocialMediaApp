@@ -37,8 +37,24 @@
   }
 }
 
+.main {
+  display: flex;
+  height: 100%;
+  align-items: stretch;
+}
+
 .content {
-  margin-right:20%;
+  flex: 0.75;
+}
+
+/* new post styling */
+.newPost {
+  padding: 25px 10px;
+}
+
+#newPostText {
+  width: 50%;
+  height: 36px;
 }
 
 .login {
@@ -47,7 +63,23 @@
   background-color:rgb(238, 207, 34);
 }
 
+/* sidebar styling */
+
 .sidebar{
-  right: 0;
-  width: 20%;
+  padding: 25px 10px;
+  flex: 0.25;
 }
+
+.sidebar-option {
+  display: flex;
+  align-items: center;
+  padding: 7px;
+  cursor: pointer;
+}
+
+.sidebar-option:hover {
+  background-color:rgb(255, 254, 221);
+  border-radius: 10px;
+}
+
+/* Nav bar styling */

@@ -21,7 +21,7 @@ const userRouter = require('./routes/user')
 const postRouter = require('./routes/post')
 
 app.use('/user', userRouter)
-app.use('/home', postRouter) //Might need to change this to /home or something
+app.use('/', postRouter) //Might need to change this to /home or something
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);

@@ -14,10 +14,11 @@ const Newpost = ({ onSubmit }) => {
     }
 
     return (
-        <div>
-            <form className='newPostForm' onSubmit={handleNewPost}>
-                <input type='text' placeholder="What's on your mind?" value={postValue} onChange={handleChange}></input>
+        <div className='newPost'>
+            <form className='newPostForm' onSubmit={handleNewPost}>                
                 <img alt='null'></img>
+                <input id='newPostText' type='text' placeholder="What's on your mind?" value={postValue} onChange={handleChange}></input>
+                <br/>
                 <button>Add Photo</button>
                 <input type='submit' value='Post' />
             </form>
