@@ -1,3 +1,3 @@
 # Simple Social Media App
-Created this app to learn the MERN stack
+Created this app to learn the MERN stack. Still a WIP.
 
