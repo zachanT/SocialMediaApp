@@ -50,6 +50,7 @@ const _posts = [{
 
 const App = () => {
   const [posts, setPosts] = useState([]);
+  const accountName = "My Name"
 
   useEffect(() => {
     axios.get('http://localhost:5000/')
@@ -75,7 +76,7 @@ const App = () => {
     const _date = d.getDate() + "-" + d.getMonth() + "-" + d.getFullYear();
     const post = {
       postId: postCount++,
-      poster: "My Name",
+      posterName: accountName,
       post: text,
       date: _date,
       likes: 0,
@@ -83,10 +84,10 @@ const App = () => {
     }
 
     setPosts([...posts, post]);
-    axios.post('http://localhost:5000/add', post)
+    axios.post('http://localhost:5000/add/', post)
       .then(res => {
         // All the state stuff is in the component...
-
+        console.log(res)
       })
       .catch(err => {
         console.log("Error " + err);
@@ -94,25 +95,45 @@ const App = () => {
   }
 
   /* Function to handle when the like button is pressed on a post */
-  const handleLike = (ind) => {
+  const handleLike = (ind, postId) => {
     let _posts = posts.slice();
     _posts[ind].likes++;
     setPosts(_posts);
+
+    // Add logic so that you can only like a post once
+    axios.post('http://localhost:5000/update/' + postId, _posts[ind])
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log("Error: " + err);
+      })
   }
 
   /* Adds a comment to a post when the comment button is clicked */
-  const handleComment = (ind, comment) => {
+  const handleComment = (ind, postId, comment) => {
     let _posts = posts.slice();
     const d = new Date();
     const _date = d.getDate() + "-" + d.getMonth() + "-" + d.getFullYear();
     const newComment = {
       id: _posts[ind].comments.length+1,
-      commentor: "My Name",
+      commenter: accountName,
       comment: comment,
       date: _date,
+      likes: 0,
     }
     _posts[ind].comments = [..._posts[ind].comments, newComment]
+    console.log(newComment)
+    console.log(_posts[ind])
     setPosts(_posts);
+
+    axios.post('http://localhost:5000/update/' + postId, _posts[ind])
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log("Error: " + err)
+      })
   }
 
   return (

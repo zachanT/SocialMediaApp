@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import Like from '@material-ui/icons/ThumbUp'
 
-export const Post = ({post, index, clickLike, clickComment}) => {
+export const Post = ({post, postId, index, clickLike, clickComment}) => {
     const [comment, setComment] = useState("")
 
     const handleChange = (e) => {
@@ -9,19 +9,21 @@ export const Post = ({post, index, clickLike, clickComment}) => {
     }
 
     return (
-        <div className='post' id={index}>
+        <div className='post' id={postId}>
             <img alt='null'></img>
             {post.poster}
             <p>{post.post}</p>
             {post.likes}
-            <button className={index} onClick={()=>clickLike(index)}> <Like/> Like</button>
+            <button className={index} onClick={()=>clickLike(index, postId)}> <Like/> Like</button>
             <button >Share</button>
             <input type='text' value={comment} onChange={handleChange}/>
-            <button onClick={()=>clickComment(index, comment)}>Comment</button>
+            <button onClick={()=>clickComment(index, postId, comment)}>Comment</button>
             {post.comments.map((comment) =>
-                <div>
-                    <p>{comment.commentor}</p>
+                <div className={postId} id={comment.id}>
+                    <p>{comment.commenter}</p>
                     <p>{comment.comment}</p>
+                    {comment.likes}
+                    <button>  <Like /> Like</button>
                 </div>
             )}
         </div>

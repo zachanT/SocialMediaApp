@@ -39,7 +39,6 @@
 
 .main {
   display: flex;
-  height: 100%;
   align-items: stretch;
 }
 
@@ -66,6 +65,7 @@
 /* sidebar styling */
 
 .sidebar{
+  order: 2;
   padding: 25px 10px;
   flex: 0.25;
 }
@@ -80,6 +80,10 @@
 .sidebar-option:hover {
   background-color:rgb(255, 254, 221);
   border-radius: 10px;
+}
+
+.sidebar-option>.MuiSvgIcon-root {
+  font-size: xx-large;
 }
 
 /* Nav bar styling */

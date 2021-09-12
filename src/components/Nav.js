@@ -12,6 +12,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
+    display: 'flex',
     flexGrow: 1,
   },
   menuButton: {
@@ -72,6 +73,15 @@ const useStyles = makeStyles((theme) => ({
       display: 'none',
     },
   },
+  userName: {
+    flex: '0.25',
+    alignItems: 'center',
+  },
+  other: {
+    display: 'flex',
+    flex: '0.75',
+    alignItems: 'center',
+  },
 }));
 
 export default function PrimarySearchAppBar() {
@@ -83,34 +93,37 @@ export default function PrimarySearchAppBar() {
     <div className={classes.grow} id='navbar'>
       <AppBar position="static">
         <Toolbar id='navbar'>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
-          >
-            <Home />
-          </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
-            Social Hub
-          </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
+          <div className={classes.other}>
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="open drawer"
+            >
+              <Home />
+            </IconButton>
+            <Typography className={classes.title} variant="h6" noWrap>
+              Social Hub
+            </Typography>
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Search…"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{ 'aria-label': 'search' }}
+              />
             </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
           </div>
-          <div className={classes.grow} />
-          <Typography className={classes.title} variant="h6" noWrap>
-            My Name
-          </Typography>
+          <div className={classes.userName} >
+            <Typography className={classes.title} variant="h6" noWrap>
+              My Name
+            </Typography>
+          </div>
         </Toolbar>
       </AppBar>
     </div>

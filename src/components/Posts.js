@@ -6,6 +6,7 @@ const Posts = ( {posts, clickLike, clickComment} ) => {
             {posts.map((post, index) => (
                 <Post 
                     key={index}
+                    postId={post._id}
                     post={post}
                     index={index}
                     clickLike={clickLike}

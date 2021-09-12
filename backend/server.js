@@ -19,9 +19,11 @@ connection.once('open', () => {
 
 const userRouter = require('./routes/user')
 const postRouter = require('./routes/post')
+const commentRouter = require('./routes/comment')
 
 app.use('/user', userRouter)
 app.use('/', postRouter) //Might need to change this to /home or something
+app.use('/comment', commentRouter)
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);

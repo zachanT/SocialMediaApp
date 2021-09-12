@@ -8,7 +8,7 @@ const postSchema = new Schema ({
     post: { type: String },
     date: { type: Date, required: true },
     likes: {type: Number, required: true },
-    comments: [String], //Could make comment it's own model for more functionality in the future...
+    comments: {type: [Object]}, //type: [Schema.Types.commentSchema]
 },{
     timestamps: true,
 })

@@ -7,7 +7,7 @@ router.route('/').get((req, res)=> {
         .catch(err => res.status(400).json('Error ' + err))
 })
 
-router.route('/:id').delete((req, res) => {
+router.route('/:id').get((req, res) => {
     Post.findById(req.params.id)
         .then(post => res.json(post))
         .catch(err => res.status(400).json('Error ' + err))
@@ -25,7 +25,6 @@ router.route('/add').post((req, res) => {
         post,
         date,
         likes,
-        comments,
     })
 
     console.log(newPost)
@@ -48,7 +47,13 @@ router.route('/update/:id').post((req, res) => {
             post.post = req.body.post
             post.date = Date.parse(req.body.date)
             post.likes = Number(req.body.likes)
+
+            /* If you set comments to be an array of commentSchema then you would probably need to create a comment 
+            object or something before adding it... */
             post.comments = req.body.comments
+
+            console.log(req.body.comments)
+            console.log(post.comments)
 
             post.save()
                 .then(() => res.json('Post Updated!'))
