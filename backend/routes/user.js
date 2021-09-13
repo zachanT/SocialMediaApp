@@ -14,7 +14,7 @@ router.route('/:id').get((req, res) => {
 })
 
 router.route('/add').post((req, res) => {
-    const name = req.body.name
+    /*const name = req.body.name
     const email = req.body.email
     const password = req.body.password
     const posts = req.body.posts
@@ -28,7 +28,25 @@ router.route('/add').post((req, res) => {
 
     newUser.save()
         .then(() => res.json('User Created!'))
-        .catch(err => res.status(400).json('Error ' + err))
+        .catch(err => res.status(400).json('Error ' + err))*/
+
+    User.findOne({_id: req.body.id}), (err, doc) => {
+        if(err) throw err
+        if(doc) res.send("User already exists")
+        if(!doc) {
+            const newUser = new User({
+                name: req.body.name,
+                email: req.body.email,
+                password: req.body.password,
+                posts: req.body.posts,
+                googleId: req.body.googleId,
+                secret: req.body.secret,
+            })
+            newUser.save()
+                .then(() => res.json('User Created!'))
+                .catch(err => res.status(400).json('Error ' + err))
+        }
+    }
 })
 
 router.route('/update/:id').post((req, res) => {

@@ -6,6 +6,7 @@ const postSchema = new Schema ({
     //id: { type: Number, required: true },
     posterName: { type: String, required: true },
     post: { type: String },
+    //img: {type: String},
     date: { type: Date, required: true },
     likes: {type: Number, required: true },
     comments: {type: [Object]}, //type: [Schema.Types.commentSchema]

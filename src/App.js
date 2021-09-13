@@ -53,7 +53,7 @@ const App = () => {
   const accountName = "My Name"
 
   useEffect(() => {
-    axios.get('http://localhost:5000/')
+    axios.get('http://localhost:5000/post')
         .then(response => {
           if(response.data.length > 0) {
             setPosts(response.data)
@@ -84,7 +84,7 @@ const App = () => {
     }
 
     setPosts([...posts, post]);
-    axios.post('http://localhost:5000/add/', post)
+    axios.post('http://localhost:5000/post/add/', post)
       .then(res => {
         // All the state stuff is in the component...
         console.log(res)
@@ -101,7 +101,7 @@ const App = () => {
     setPosts(_posts);
 
     // Add logic so that you can only like a post once
-    axios.post('http://localhost:5000/update/' + postId, _posts[ind])
+    axios.post('http://localhost:5000/post/update/' + postId, _posts[ind])
       .then(res => {
         console.log(res)
       })
@@ -127,7 +127,7 @@ const App = () => {
     console.log(_posts[ind])
     setPosts(_posts);
 
-    axios.post('http://localhost:5000/update/' + postId, _posts[ind])
+    axios.post('http://localhost:5000/post/update/' + postId, _posts[ind])
       .then(res => {
         console.log(res)
       })

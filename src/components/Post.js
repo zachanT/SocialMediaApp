@@ -22,8 +22,8 @@ export const Post = ({post, postId, index, clickLike, clickComment}) => {
                 <div className={postId} id={comment.id}>
                     <p>{comment.commenter}</p>
                     <p>{comment.comment}</p>
-                    {comment.likes}
-                    <button>  <Like /> Like</button>
+                    {/*{comment.likes}
+                    <button>  <Like /> Like</button>*/}
                 </div>
             )}
         </div>
