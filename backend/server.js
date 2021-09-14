@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require("express-session");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const { OAuth2Client } = require('google-auth-library')
+const client = new OAuth2Client(process.env.CLIENT_ID)
 
 let User = require('./models/user.model')
 
@@ -49,29 +51,12 @@ passport.use(new GoogleStrategy({
     callbackURL: process.env.CALLBACK_URL,
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
   },
-  function(accessToken, refreshToken, profile, cb) {
-    User.findOrCreate({ googleId: profile.id, username: profile.id }, function (err, user) {
+  function(request, accessToken, refreshToken, profile, cb) {
+    User.findOrCreate({ googleId: profile.id }, function (err, user) {
       return cb(err, user);
     });
   }
 ));
-
-const checkAuthenticated = (req, res, next) => {
-  if(req.isAuthenticated()) {
-    return next()
-  }
-  res.redirect('/login')
-}
-
-const checkNotAuthenticated = (req, res, next) => {
-  /*if(req.isAuthenticated()) {
-    return res.redirect('/')
-  }*/
-  if(req.user) {
-    next()
-  }
-  res.redirect('/')
-}
 
 /* Routes */
 const userRouter = require('./routes/user')
@@ -83,7 +68,7 @@ app.use('/post', postRouter) //Might need to change this to /home or something
 app.use('/comment', commentRouter)
 
 app.get("/auth/google",
-  passport.authenticate("google", { scope: ["profile"] })
+  passport.authenticate("google", { scope: ["email", "profile"] })
 );
 
 app.get("/auth/google/callback",
@@ -97,6 +82,34 @@ app.get("/auth/google/callback",
 app.get("/logout", function(req, res){
   res.redirect("http://localhost:3000/login");
 });
+
+app.post("/auth/google", async (req, res) => {
+  const { token } = req.body
+
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: process.env.CLIENT_ID
+  })
+  const { name, email, picture } = ticket.getPayload();
+
+  const newUser = new User({
+    name: name,
+    email: email,
+    password: "",
+    posts: [],
+    googleId: token,
+    secret: "",
+  })
+
+  req.session.userId = newUser.id
+
+  newUser.save()
+    .then(() => {
+      res.json(newUser)
+      res.status(201)
+    })
+    .catch(err => res.status(400).json('Error ' + err))
+})
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);

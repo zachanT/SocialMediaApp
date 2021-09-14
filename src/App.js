@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
-import { BrowserRouter as Router, Route } from "react-router-dom"
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 
 import './App.css';
 import Login from './components/Login';
@@ -51,9 +51,10 @@ const _posts = [{
 const App = () => {
   const [posts, setPosts] = useState([]);
   const accountName = "My Name"
+  const user = null;
 
   useEffect(() => {
-    axios.get('http://localhost:5000/post')
+    axios.get('http://localhost:5000/post/')
         .then(response => {
           if(response.data.length > 0) {
             setPosts(response.data)
@@ -139,31 +140,30 @@ const App = () => {
   return (
     <Router>
       <div className="App">
-        <Route path='/'>
-          <Nav />
-          <div className="main">
-            <Sidebar />
-            <div className="content">
-              <Newpost onSubmit={handleNewPost}/>
-              {posts.length > 0 ? (
-                <Posts 
-                  posts={posts}
-                  clickLike={handleLike}
-                  clickComment={handleComment}
-                />
-              ) : (
-                'No posts, follow someone to see posts'
-              )}
+        {user ? (
+          <Route path='/'>
+            <Nav />
+            <div className="main">
+              <Sidebar />
+              <div className="content">
+                <Newpost onSubmit={handleNewPost}/>
+                {posts.length > 0 ? (
+                  <Posts 
+                    posts={posts}
+                    clickLike={handleLike}
+                    clickComment={handleComment}
+                  />
+                ) : (
+                  'No posts, follow someone to see posts'
+                )}
+              </div>
             </div>
+          </Route>
+          ) : (
+          <div>
+              <Login />
           </div>
-        </Route>
-
-        <Route path='/login'>
-          <Login />
-        </Route>
-        <Route path='/signup'>
-          <Signup />
-        </Route>
+        )}
       </div>
     </Router>
   );

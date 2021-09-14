@@ -1,60 +1,155 @@
-import {useState} from 'react'
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Avatar, Button, Paper, Grid, Typography, Container, makeStyles } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
+import { GoogleLogin } from 'react-google-login';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import axios from 'axios'
 
+import Input from './Input';
+
+const useStyles = makeStyles((theme) => ({
+    paper: {
+        marginTop: theme.spacing(8),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: theme.spacing(2),
+      },
+      root: {
+        '& .MuiTextField-root': {
+          margin: theme.spacing(1),
+        },
+      },
+      avatar: {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.main,
+      },
+      form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing(3),
+      },
+      submit: {
+        margin: theme.spacing(3, 0, 2),
+      },
+      googleButton: {
+        marginBottom: theme.spacing(2),
+      },
+}));
+
+const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '' };
+
 const Signup = () => {
-    const [name, setName] = useState("")
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [cpassword, setCPassword] = useState("")
+    const [form, setForm] = useState(initialState);
+    const [isSignup, setIsSignup] = useState(false);
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const classes = useStyles();
 
-    const handleNameChange = (e) => {
-        setName(e.target.value)
+    const [showPassword, setShowPassword] = useState(false);
+    const handleShowPassword = () => setShowPassword(!showPassword);
+
+    const switchMode = () => {
+        setForm(initialState);
+        setIsSignup((prevIsSignup) => !prevIsSignup);
+        setShowPassword(false);
+    };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (isSignup) {
+      dispatch(signup(form, history));
+    } else {
+      dispatch(signin(form, history));
     }
+  };
 
-    const handleEmailChange = (e) => {
-        setEmail(e.target.value)
-    }
+    const googleSuccess = async (res) => {
+        const result = res?.profileObj;
+        const token = res?.tokenId;
 
-    const handlePasswordChange = (e) => {
-        setPassword(e.target.value)
-    }
+        try {
+        dispatch({ type: 'AUTH', data: { result, token } });
 
-    const handleCPasswordChange = (e) => {
-        setCPassword(e.target.value)
-    }
-
-    const handleSignup = (e) => {
-        e.preventDefault()
-        const user = {
-            name: name,
-            email: email,
-            password: password,
-            posts: [],
+        history.push('/');
+        } catch (error) {
+        console.log(error);
         }
+    };
 
-        axios.post("http://localhost:5000/user/add/", {user})
-            .then(res => {
-                setName("")
-                setEmail("")
-                setPassword("")
-                setCPassword("")
-                console.log("pls work")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
+    const googleError = () => alert('Google Sign In was unsuccessful. Try again later');
+
+    const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+    const signin = (formData, router) => async (dispatch) => {
+        try {
+          //const { data } = await api.signIn(formData);
+          const { data } = await axios.post('/user/signIn', formData)
+      
+          dispatch({ type: 'AUTH', data });
+      
+          router.push('/');
+        } catch (error) {
+          console.log(error);
+        }
+    };
+
+    const signup = (formData, router) => async (dispatch) => {
+        try {
+          const { data } = await axios.post('/user/signUp', formData) //api.signUp(formData);
+      
+          dispatch({ type: 'AUTH', data });
+      
+          router.push('/');
+        } catch (error) {
+          console.log(error);
+        }
+    };
 
     return (
-        <div className='login'>
-            <form className='signupForm' onSubmit={handleSignup} >
-                <input type='text' placeholder='Username' onChange={handleNameChange} required />
-                <input type='email' placeholder='Email' onChange={handleEmailChange} required />
-                <input type='password' placeholder='Password' onChange={handlePasswordChange} required />
-                <input type='password' placeholder='Confirm Password' onChange={handleCPasswordChange} required />
-                <input type='submit' value='Sign Up' />
-            </form>
-        </div>
+        <Container component="main" maxWidth="xs">
+            <Paper className={classes.paper} elevation={3}>
+                <Avatar className={classes.avatar}>
+                <LockOutlinedIcon />
+                </Avatar>
+                <Typography component="h1" variant="h5">{ isSignup ? 'Sign up' : 'Sign in' }</Typography>
+                <form className={classes.form} onSubmit={handleSubmit}>
+                <Grid container spacing={2}>
+                    { isSignup && (
+                    <>
+                    <Input name="firstName" label="First Name" handleChange={handleChange} autoFocus half />
+                    <Input name="lastName" label="Last Name" handleChange={handleChange} half />
+                    </>
+                    )}
+                    <Input name="email" label="Email Address" handleChange={handleChange} type="email" />
+                    <Input name="password" label="Password" handleChange={handleChange} type={showPassword ? 'text' : 'password'} handleShowPassword={handleShowPassword} />
+                    { isSignup && <Input name="confirmPassword" label="Repeat Password" handleChange={handleChange} type="password" /> }
+                </Grid>
+                <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+                    { isSignup ? 'Sign Up' : 'Sign In' }
+                </Button>
+                {/*<GoogleLogin
+                    clientId="564033717568-e5p23rhvcs4i6kffgsbci1d64r8hp6fn.apps.googleusercontent.com"
+                    render={(renderProps) => (
+                    <Button className={classes.googleButton} color="primary" fullWidth onClick={renderProps.onClick} disabled={renderProps.disabled} variant="contained">
+                        Google Sign In
+                    </Button>
+                    )}
+                    onSuccess={googleSuccess}
+                    onFailure={googleError}
+                    cookiePolicy="single_host_origin"
+                    />*/}
+                <Grid container justify="flex-end">
+                    <Grid item>
+                    <Button onClick={switchMode}>
+                        { isSignup ? 'Already have an account? Sign in' : "Don't have an account? Sign Up" }
+                    </Button>
+                    </Grid>
+                </Grid>
+                </form>
+            </Paper>
+        </Container>
     )
 }
 
