@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const postSchema = new Schema ({
     //id: { type: Number, required: true },
+    posterId: { type: String, required: true },
     posterName: { type: String, required: true },
     post: { type: String },
     //img: {type: String},

@@ -89,6 +89,10 @@
   background-color:rgb(238, 207, 34);
 }
 
+.login-paper {
+  align-items: 'center';
+}
+
 .google-button {
   height: 40px;
   border-width: 0;

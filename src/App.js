@@ -51,7 +51,9 @@ const _posts = [{
 const App = () => {
   const [posts, setPosts] = useState([]);
   const accountName = "My Name"
-  const user = null;
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
+
+  console.log(user)
 
   useEffect(() => {
     axios.get('http://localhost:5000/post/')
@@ -67,6 +69,12 @@ const App = () => {
         .catch((err) => {
           console.log(err);
         })
+  }, [])
+
+  useEffect(() => {
+    const token = user?.token
+
+    setUser(JSON.parse(localStorage.getItem('profile')))
   }, [])
   
   var postCount = posts.length;

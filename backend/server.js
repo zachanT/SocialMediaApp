@@ -3,6 +3,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require("express-session");
+const cookieParser = require("cookie-parser")
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const { OAuth2Client } = require('google-auth-library')
 const client = new OAuth2Client(process.env.CLIENT_ID)
@@ -26,6 +27,8 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(cookieParser('secret'))
 
 /* Link to mongoDB database */
 const uri = process.env.ATLAS_URI;
@@ -66,6 +69,12 @@ const commentRouter = require('./routes/comment')
 app.use('/user', userRouter)
 app.use('/post', postRouter) //Might need to change this to /home or something
 app.use('/comment', commentRouter)
+app.use(async (req, res, next) => {
+  const user = await User.findById(req.session.userId)
+  console.log("ID: " + req.session.userId)
+  req.user = user
+  next()
+})
 
 app.get("/auth/google",
   passport.authenticate("google", { scope: ["email", "profile"] })
@@ -84,6 +93,7 @@ app.get("/logout", function(req, res){
 });
 
 app.post("/auth/google", async (req, res) => {
+  console.log("Processing google login...")
   const { token } = req.body
 
   const ticket = await client.verifyIdToken({
@@ -96,19 +106,57 @@ app.post("/auth/google", async (req, res) => {
     name: name,
     email: email,
     password: "",
-    posts: [],
+    profilePic: picture,
     googleId: token,
     secret: "",
   })
 
-  req.session.userId = newUser.id
+  //req.session.userId = newUser._id
 
-  newUser.save()
-    .then(() => {
-      res.json(newUser)
-      res.status(201)
-    })
-    .catch(err => res.status(400).json('Error ' + err))
+  console.log("Created")
+  /*newUser.save()
+    .then(() => res.json(newUser))
+    .catch(err => res.status(400).json('Error ' + err))*/
+
+  User.findOne({ _id: newUser.id }), (err, doc) => {
+    console.log("Looking...")
+    if(err) {
+      res.status(400).json('Error ' + err)
+    }
+    if(doc) {
+      console.log("here")
+      console.log(doc)
+      doc.name = name,
+      doc.profilePic = picture,
+      doc.googleId = token
+      doc.save()
+        .then(() => {
+          res.json(doc)
+        })
+        .catch(err => res.status(400).json('Error ' + err))
+    }
+    if(!doc) {
+      console.log("there")
+      newUser.save()
+        .then(() => res.json(newUser))
+        .catch(err => res.status(400).json('Error ' + err))
+    }
+  }
+  res.json(newUser)
+})
+
+app.get('/me', async (req, res) => {
+  res.status(200)
+  console.log(req.session.userId)
+  res.json(req.user)
+})
+
+app.delete("/auth/logout", async (req, res) => {
+  await req.session.destroy()
+  res.status(200)
+  res.json({
+    message: "Logged out successfully"
+  })
 })
 
 app.listen(port, () => {

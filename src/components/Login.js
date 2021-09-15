@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, useHistory } from "react-router-dom"
 import { useState } from "react"
 import { GoogleLogin } from 'react-google-login';
 import { Avatar, Button, Paper, Grid, Typography, Container, makeStyles } from '@material-ui/core';
@@ -10,6 +10,7 @@ require('dotenv').config();
 const Login = ({  }) => {
     const [isSignup, setIsSignup] = useState(false)
     const [showPassword, setShowPassword] = useState(false);
+    const history = useHistory()
 
     const switchMode = () => {
         setIsSignup(!isSignup)
@@ -32,7 +33,6 @@ const Login = ({  }) => {
         const token = res?.tokenId
 
         try {
-            
         } catch (error) {
             console.log(error)
         }
@@ -43,10 +43,11 @@ const Login = ({  }) => {
     }
 
     const handleLogin = async (gData) => {
-        const res = await fetch({
+        console.log("Logging in...")
+        const res = await axios({
             method: 'post',
             url: 'http://localhost:5000/auth/google',
-            body: JSON.stringify({
+            data: JSON.stringify({
                 token: gData.tokenId
             }),
             headers: {
@@ -54,12 +55,13 @@ const Login = ({  }) => {
             }
         })
 
-        const data = await res.json()
-        // axios post request to store user?
+        localStorage.setItem('profile', JSON.stringify({ ...res?.data}))
+        history.push('/')
     }
 
     return (
         <div className='login'>
+            <Paper className='login-paper' elevation={5}>
             <h1>{isSignup ? 'Sign Up' : 'Log In'}</h1>
             <form className='LoginFrom' onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
@@ -98,6 +100,7 @@ const Login = ({  }) => {
                     <span className="google-button__text">Sign in with Google</span>
                 </button>
                 </form>*/}
+            </Paper>
         </div>
     )
 }

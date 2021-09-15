@@ -8,6 +8,7 @@ const Sidebar = () => {
             <div className='sidebar-option'><Bell /> Notifications </div>
             <div className='sidebar-option'><Followers /> Following </div>
             <div className='sidebar-option'><Settings /> Settings </div>
+            <div className='sidebar-option'> Sign Out </div>
         </div>
     )
 }
