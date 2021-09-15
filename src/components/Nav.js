@@ -12,6 +12,9 @@ const useStyles = makeStyles((theme) => ({
   grow: {
     display: 'flex',
     flexGrow: 1,
+    position: 'sticky',
+    top: 0,
+    zIndex: 1,
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -82,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
+export default function PrimarySearchAppBar({ name }) {
   const classes = useStyles();
 
   return (
@@ -117,7 +120,7 @@ export default function PrimarySearchAppBar() {
           </div>
           <div className={classes.userName} >
             <Typography className={classes.title} variant="h6" noWrap>
-              My Name
+              {name}
             </Typography>
           </div>
         </Toolbar>

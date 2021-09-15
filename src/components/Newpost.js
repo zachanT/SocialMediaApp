@@ -1,6 +1,8 @@
 import {useState} from "react";
+import { Avatar, Button, Paper } from "@material-ui/core"
+import yellow from "@material-ui/core"
 
-const Newpost = ({ onSubmit }) => {
+const Newpost = ({ onSubmit, user }) => {
     const [postValue, setPostValue] = useState("");
 
     const handleChange = (e) => {
@@ -15,13 +17,12 @@ const Newpost = ({ onSubmit }) => {
 
     return (
         <div className='newPost'>
-            <form className='newPostForm' onSubmit={handleNewPost}>         
-                <img alt='null'></img>
-                <input type='text' placeholder='Name' /> <br />
+            <Avatar src={user.profilePic} alt={user.name} />
+            <form className='newPostForm' onSubmit={handleNewPost}>
                 <input id='newPostText' type='text' placeholder="What's on your mind?" value={postValue} onChange={handleChange}></input>
-                <br/>
+                
                 <button>Add Photo</button>
-                <input type='submit' value='Post' />
+                <Button type='submit' className='btn_post'>Post</Button>
             </form>
         </div>
     )

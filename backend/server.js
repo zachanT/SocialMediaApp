@@ -113,11 +113,6 @@ app.post("/auth/google", async (req, res) => {
 
   //req.session.userId = newUser._id
 
-  console.log("Created")
-  /*newUser.save()
-    .then(() => res.json(newUser))
-    .catch(err => res.status(400).json('Error ' + err))*/
-
   User.findOne({ _id: newUser.id }), (err, doc) => {
     console.log("Looking...")
     if(err) {
@@ -143,6 +138,7 @@ app.post("/auth/google", async (req, res) => {
     }
   }
   res.json(newUser)
+  //res.redirect('/')
 })
 
 app.get('/me', async (req, res) => {

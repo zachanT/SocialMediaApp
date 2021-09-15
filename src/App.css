@@ -40,28 +40,98 @@
 .main {
   display: flex;
   align-items: stretch;
+  background-color:rgb(235, 235, 235)
 }
 
 .content {
-  flex: 0.75;
+  flex: 0.77;
 }
 
 /* new post styling */
 .newPost {
-  padding: 25px 10px;
+  display: flex;
+  padding: 25px 15px;
+  border-radius: 10px;
+  box-shadow: 0px 5px 7px -7px rgba(0, 0, 0, 0.75);
+  width: 97.5%;
+  background-color: white;
 }
 
 #newPostText {
-  width: 50%;
-  height: 36px;
+  outline-width: 0;
+  border: none;
+  padding: 10px 30px;
+  margin: 0 10px;
+  background-color: #eff2f5;
+  border-radius: 999px;
+  width: 300px;
+}
+
+/* Post styling */
+.post {
+  background-color: white;
+  width: 100%;
+  margin-top: 15px;
+  border-radius: 10px;
+  background-clip: white;
+  box-shadow: 0px 5px 7px -7px rgba(0, 0, 0, 0.75);
+  border-right: 1px solid lightgray;
+}
+
+.post_top {
+  display: flex;
+  position: relative;
+  align-items: center;
+  padding: 15px;
+}
+
+.post_info>h3{
+  font-size: medium;
+}
+
+.post_info>p{
+  color:gray;
+  font-size: small;
+}
+
+.post_options {
+  padding: 10px;
+  border-top: 1px solid lightgray;
+  display: flex;
+  justify-content: space-evenly;
+  font-size: medium;
+  color: gray;
+}
+
+.post_option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  float: 1;
+}
+
+.comments {
+}
+
+.comment {
+  padding: 10px;
+  border-top: 1px solid lightgray;
+}
+
+.comment_top {
+  flex: 1;
 }
 
 /* sidebar styling */
-
 .sidebar{
   order: 2;
-  padding: 25px 10px;
-  flex: 0.25;
+  padding: 25px 0px;
+  flex: 0.2;
+  align-self: flex-start;
+  position: sticky;
+  top: 70px;
+  height: 100%;
 }
 
 .sidebar-option {
@@ -72,7 +142,7 @@
 }
 
 .sidebar-option:hover {
-  background-color:rgb(255, 254, 221);
+  background-color:rgb(255, 253, 195);
   border-radius: 10px;
 }
 

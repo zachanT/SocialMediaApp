@@ -25,7 +25,7 @@ const Login = ({  }) => {
     }
 
     const handleSubmit = () => {
-
+        
     }
 
     const googleSuccess = async (res) => {
@@ -62,7 +62,7 @@ const Login = ({  }) => {
     return (
         <div className='login'>
             <Paper className='login-paper' elevation={5}>
-            <h1>{isSignup ? 'Sign Up' : 'Log In'}</h1>
+            <h1>{isSignup ? 'Sign Up' : 'Log In'} (Only Google Log In ATM...)</h1>
             <form className='LoginFrom' onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
                 {isSignup && (
@@ -74,7 +74,7 @@ const Login = ({  }) => {
                 <input type='text' placeholder='Email' required/>
                 <input type={showPassword ? 'text' : 'password'} placeholder='Password' required/>
                 {isSignup && <input type='password' placeholder='Confirm Password' required/>}
-                <Button type='submit' fullwidth variant='contained'>
+                <Button type='submit' fullwidth variant='contained' disabled>
                     {isSignup ? 'Sign Up' : 'Log In'}
                 </Button>
                 </Grid>
@@ -89,7 +89,7 @@ const Login = ({  }) => {
                 clientId={process.env.REACT_APP_CLIENT_ID}
                 buttonText="Sign in with Google"
                 onSuccess={handleLogin}
-                onFailure={handleLogin}
+                onFailure={googleFailure}
                 cookiePolicy={'single_host_origin'}
             />
             {/*<form action="http://localhost:5000/auth/google">

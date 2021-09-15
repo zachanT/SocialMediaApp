@@ -11,6 +11,7 @@ const Posts = ( {posts, clickLike, clickComment} ) => {
                     index={index}
                     clickLike={clickLike}
                     clickComment={clickComment}
+                    timestamp={post.createdAt}
                 />
             ))}
         </>

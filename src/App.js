@@ -1,56 +1,20 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom"
 
 import './App.css';
 import Login from './components/Login';
 import Newpost from './components/Newpost.js'
 import Posts from './components/Posts.js'
 import Sidebar from './components/Sidebar'
-import Signup from './components/Signup'
 import Nav from './components/Nav'
 
 /* useEffect(fn(), []) expects a function that is the sideeffect and an array of dependent state variables. The function 
 will be called everytime one of the dependent variables' value gets updated
 */ 
 
-/*
-  I guess just have a function here to pull data from the database and load it into the state.
-  
-  const accounts = [{
-    id: _,
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    posts: [],
-    following: [],
-    followers: [],
-    profilePic: '',
-  }]
-*/
-
-const _posts = [{
-  postId: 0,
-  poster: "John Smith",
-  post: "I am so awesome!",
-  date: "08-31-2021",
-  likes: 0,
-  comments: []
-},
-{
-  postId: 1,
-  poster: "Joe Ma",
-  post: "we do a little trolling",
-  date: "08-31-2021",
-  likes: 0,
-  comments: []
-}
-]
-
 const App = () => {
   const [posts, setPosts] = useState([]);
-  const accountName = "My Name"
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
 
   console.log(user)
@@ -84,8 +48,10 @@ const App = () => {
     const d = new Date();
     const _date = d.getDate() + "-" + d.getMonth() + "-" + d.getFullYear();
     const post = {
-      postId: postCount++,
-      posterName: accountName,
+      posterId: user._id,
+      posterName: user.name,
+      posterPic: user.profilePic,
+      //postId: postCount++,
       post: text,
       date: _date,
       likes: 0,
@@ -126,7 +92,8 @@ const App = () => {
     const _date = d.getDate() + "-" + d.getMonth() + "-" + d.getFullYear();
     const newComment = {
       id: _posts[ind].comments.length+1,
-      commenter: accountName,
+      commenter: user.name,
+      commenterPic: user.profilePic,
       comment: comment,
       date: _date,
       likes: 0,
@@ -148,13 +115,17 @@ const App = () => {
   return (
     <Router>
       <div className="App">
+        <Switch>          
+        <Route exact path='/login'>
+          <Login />
+        </Route>
         {user ? (
-          <Route path='/'>
-            <Nav />
+          <Route exact path='/'>
+            <Nav name={user.name}/>
             <div className="main">
               <Sidebar />
               <div className="content">
-                <Newpost onSubmit={handleNewPost}/>
+                <Newpost onSubmit={handleNewPost} user={user} />
                 {posts.length > 0 ? (
                   <Posts 
                     posts={posts}
@@ -169,9 +140,10 @@ const App = () => {
           </Route>
           ) : (
           <div>
-              <Login />
+              <Redirect to='/login' />
           </div>
         )}
+        </Switch>
       </div>
     </Router>
   );

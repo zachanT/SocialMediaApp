@@ -14,14 +14,19 @@ router.route('/:id').get((req, res) => {
 })
 
 router.route('/add').post((req, res) => {
+    const posterId = req.body.posterId
     const posterName = req.body.posterName
     const post = req.body.post
     const date = Date.parse(req.body.date);
     const likes = Number(req.body.likes)
     const comments = req.body.comments
 
+    console.log(req.body.posterId)
+
     const newPost = new Post({
+        posterId,
         posterName,
+        posterPic: req.body.posterPic,
         post,
         date,
         likes,

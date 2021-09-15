@@ -1,31 +1,60 @@
-import {useState} from 'react'
+import { useState } from 'react'
 import Like from '@material-ui/icons/ThumbUp'
+import { Avatar, Button, IconButton, Typography } from '@material-ui/core'
 
-export const Post = ({post, postId, index, clickLike, clickComment}) => {
+export const Post = ({post, postId, index, clickLike, clickComment, timestamp}) => {
     const [comment, setComment] = useState("")
 
     const handleChange = (e) => {
         setComment(e.target.value)
     }
 
+    const handleComment = () => {
+        clickComment(index, postId, comment)
+        setComment("")
+    }
+
     return (
         <div className='post' id={postId}>
-            <img alt='null'></img>
-            {post.poster}
+            <div className='post_top'>
+                <Avatar src={post.posterPic} alt='null'></Avatar>
+                <div className='post_info'>
+                    <h3>{post.posterName}</h3>
+                    <p>{(new Date(timestamp)).toLocaleString()}</p>
+                </div>
+            </div>
             <p>{post.post}</p>
-            {post.likes}
-            <button className={index} onClick={()=>clickLike(index, postId)}> <Like/> Like</button>
-            <button >Share</button>
-            <input type='text' value={comment} onChange={handleChange}/>
-            <button onClick={()=>clickComment(index, postId, comment)}>Comment</button>
+            <div className='post_options'>
+                <div className='post-option'>
+                {post.likes}
+                <Button className={index} onClick={()=>clickLike(index, postId)}>
+                    <Like/>
+                    Like
+                </Button>
+                </div>
+                <div className='post_option'>
+                <input type='text' value={comment} onChange={handleChange}/>
+                <Button onClick={handleComment}>Comment</Button>  
+                </div>       
+                <div className='post-option'>   
+                <Button >Share</Button>
+                </div>
+            </div>
+            <div className='comments'>
             {post.comments.map((comment) =>
-                <div className={postId} id={comment.id}>
-                    <p>{comment.commenter}</p>
-                    <p>{comment.comment}</p>
+                <div className='comment' id={comment.id}>
+                    <div className='comment_top'>
+                        <Avatar src={comment.commenterPic} alt="null" />
+                        <h4>{comment.commenter}</h4>
+                    </div>
+                    <div>
+                        <p>{comment.comment}</p>
+                    </div>
                     {/*{comment.likes}
-                    <button>  <Like /> Like</button>*/}
+                    <Button>  <Like /> Like</Button>*/}
                 </div>
             )}
+            </div>
         </div>
     )
 }
