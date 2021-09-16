@@ -5,6 +5,7 @@ const passport = require('passport');
 const session = require("express-session");
 const cookieParser = require("cookie-parser")
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
 const { OAuth2Client } = require('google-auth-library')
 const client = new OAuth2Client(process.env.CLIENT_ID)
 
@@ -38,8 +39,8 @@ connection.once('open', () => {
   console.log("MongoDB database connection established successfully");
 })
 
+/* not sure what this does tbh... */
 passport.use(User.createStrategy())
-
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
@@ -48,6 +49,7 @@ passport.deserializeUser(function(id, done) {
     done(err, user);
   });
 });
+
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
@@ -55,7 +57,10 @@ passport.use(new GoogleStrategy({
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
   },
   function(request, accessToken, refreshToken, profile, cb) {
+    console.log("when does this run?")
+    console.log(profile)
     User.findOrCreate({ googleId: profile.id }, function (err, user) {
+      console.log(user)
       return cb(err, user);
     });
   }
@@ -70,14 +75,14 @@ app.use('/user', userRouter)
 app.use('/post', postRouter) //Might need to change this to /home or something
 app.use('/comment', commentRouter)
 app.use(async (req, res, next) => {
-  const user = await User.findById(req.session.userId)
-  console.log("ID: " + req.session.userId)
+  const user = await User.findById(session.userId)
+  console.log("ID: " + session.userId)
   req.user = user
   next()
 })
 
 app.get("/auth/google",
-  passport.authenticate("google", { scope: ["email", "profile"] })
+  passport.authenticate('google', { scope: ["profile"] })
 );
 
 app.get("/auth/google/callback",
@@ -110,8 +115,6 @@ app.post("/auth/google", async (req, res) => {
     googleId: token,
     secret: "",
   })
-
-  //req.session.userId = newUser._id
 
   User.findOne({ _id: newUser.id }), (err, doc) => {
     console.log("Looking...")

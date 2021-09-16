@@ -44,6 +44,7 @@ const Login = ({  }) => {
 
     const handleLogin = async (gData) => {
         console.log("Logging in...")
+        console.log(gData)
         const res = await axios({
             method: 'post',
             url: 'http://localhost:5000/auth/google',

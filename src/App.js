@@ -9,13 +9,16 @@ import Posts from './components/Posts.js'
 import Sidebar from './components/Sidebar'
 import Nav from './components/Nav'
 
-/* useEffect(fn(), []) expects a function that is the sideeffect and an array of dependent state variables. The function 
-will be called everytime one of the dependent variables' value gets updated
+/* 
+  My current implementation of Google Login is 100% not secure, like at all. Anyone can just create a user object and 
+  store it in localStorage. Would need to verify, I think handling this in the backend is a more secure solution,
+  not sure how you would normally do it... 
 */ 
 
 const App = () => {
   const [posts, setPosts] = useState([]);
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
+  const [formData, setFormData] = useState({name: '', email: '', password: ''})
 
   console.log(user)
 
